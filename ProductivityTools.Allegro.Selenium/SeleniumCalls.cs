@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using ProductivityTools.SeleniumExtensions;
 using System;
 
 namespace ProductivityTools.Allegro.Selenium
@@ -14,14 +15,28 @@ namespace ProductivityTools.Allegro.Selenium
             this.Chrome = new ChromeDriver(options);
         }
 
-        public void GetPurchases()
+        public void GetPurchases(string login, string password)
         {
-            Login();
+            Login(login, password);
         }
 
-        private void Login()
+        private void Login(string login, string password)
         {
             this.Chrome.Url = Addresses.LoginPage;
+
+            IWebElement opboxfragment = this.Chrome.FindElement(By.ClassName("opbox-fragment"));
+
+            var go = opboxfragment.GetElementByInnerText("button", "przejdź dalej");
+            go.Click();
+
+            var usernamefield = this.Chrome.FindElement(By.Id("username"));
+            usernamefield.SendKeys(login);
+
+            var passwordfield = this.Chrome.FindElement(By.Id("password"));
+            passwordfield.SendKeys(password);
+
+            var loginbutton = this.Chrome.FindElement(By.Id("login-button"));
+            loginbutton.Click();
         }
     }
 }

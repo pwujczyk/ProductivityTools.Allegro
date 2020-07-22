@@ -8,7 +8,7 @@ namespace ProductivityTools.Allegro.App
         public void GetPurchases()
         {
             SeleniumCalls calls = new SeleniumCalls();
-            calls.GetPurchases();
+            calls.GetPurchases("xxx","xxx");
         }
     }
 }
