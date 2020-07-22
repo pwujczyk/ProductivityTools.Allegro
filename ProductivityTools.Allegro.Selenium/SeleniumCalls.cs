@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using ProductivityTools.SeleniumExtensions;
 using System;
+using System.Threading;
 
 namespace ProductivityTools.Allegro.Selenium
 {
@@ -15,12 +16,20 @@ namespace ProductivityTools.Allegro.Selenium
             this.Chrome = new ChromeDriver(options);
         }
 
-        public void GetPurchases(string login, string password)
+        public void GetPurchases()
         {
-            Login(login, password);
+            Thread.Sleep(2000);
+            this.Chrome.Url = Addresses.Purchased;
+
+            var orders=this.Chrome.FindElement(By.Id("my-orders-listing"));
+            var x=orders.FindElementsByIdPart("order-id");
+            foreach(var element in x)
+            {
+                Console.WriteLine(element.Text);
+            }
         }
 
-        private void Login(string login, string password)
+        public void Login(string login, string password)
         {
             this.Chrome.Url = Addresses.LoginPage;
 

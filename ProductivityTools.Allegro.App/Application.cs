@@ -5,10 +5,12 @@ namespace ProductivityTools.Allegro.App
 {
     public class Application
     {
-        public void GetPurchases()
+        public void GetPurchases(string login, string password)
         {
             SeleniumCalls calls = new SeleniumCalls();
-            calls.GetPurchases("xxx","xxx");
+            calls.Login(login, password);
+            calls.GetPurchases();
+
         }
     }
 }
