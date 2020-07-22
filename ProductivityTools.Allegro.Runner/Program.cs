@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProductivityTools.Allegro.App;
+using System;
 
 namespace ProductivityTools.Allegro.Runner
 {
@@ -6,6 +7,8 @@ namespace ProductivityTools.Allegro.Runner
     {
         static void Main(string[] args)
         {
+            Application app = new Application();
+            app.GetPurchases();
             Console.WriteLine("Hello World!");
         }
     }

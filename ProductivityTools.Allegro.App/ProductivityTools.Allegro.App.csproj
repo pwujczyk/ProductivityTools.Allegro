@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ProductivityTools.Allegro.Selenium\ProductivityTools.Allegro.Selenium.csproj" />
+  </ItemGroup>
+
 </Project>
