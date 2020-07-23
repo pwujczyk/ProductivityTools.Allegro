@@ -9,6 +9,14 @@ namespace ProductivityTools.Allegro.Selenium.Model
         public string Name { get; set; }
         public decimal SinglePrice { get; set; }
         public int Amount { get; set; }
-        public int TotalPrice { get; set; }
+        public decimal TotalPrice
+        {
+            get
+            {
+                return SinglePrice * Amount;
+            }
+        }
+
+
     }
 }

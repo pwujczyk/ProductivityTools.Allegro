@@ -31,18 +31,35 @@ namespace ProductivityTools.Allegro.Selenium
         private void FillPurchase(Purchase purchase)
         {
             this.Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
-            var detailsContainer=this.Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
-            var titleboxes = detailsContainer.FindElements(By.XPath("//*[@class='p15b4 _3kk7b _vnd3k _1plx6']"));
-            foreach (var titleBox in titleboxes)
-            {
-              
+            var detailsContainer = this.Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
+            purchase.Items = GetPurchaseItems(detailsContainer);
 
-                var title=titleBox.FindElement(By.TagName("Span"));
-                Console.WriteLine(title.GetAttribute("innerHTML"));
-            }
+
+            var deliveryAddresField = detailsContainer.FindElement(By.Id("delivery-address"));
+            purchase.DeliveryAddress = deliveryAddresField.InnerText();
 
             Console.WriteLine();
 
+        }
+
+        private List<PurchaseItem> GetPurchaseItems(IWebElement detailsContainer)
+        {
+            List<PurchaseItem> result = new List<PurchaseItem>();
+
+            var titleboxes = detailsContainer.FindElementsByMultipleClass("p15b4 _3kk7b _vnd3k _1plx6");
+            foreach (var titleBox in titleboxes)
+            {
+                PurchaseItem item = new PurchaseItem();
+                var title = titleBox.FindElement(By.TagName("Span"));
+                item.Name = title.InnerHtml();
+
+                var amountAndPrice = titleBox.FindElementByMultipleClass("c1npm trz41 _3kk7b _t0xzz _1t6t8");
+                var amount = amountAndPrice.InnerText();
+                item.Amount = int.Parse(amount.Substring(0, amount.IndexOf('x')).Trim());
+                item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
+
+            }
+            return result;
         }
 
         public List<Purchase> GetPurchasesItems()
@@ -51,12 +68,12 @@ namespace ProductivityTools.Allegro.Selenium
             Thread.Sleep(2000);
             this.Chrome.Url = Addresses.Purchased;
 
-            var ordersTable=this.Chrome.FindElement(By.Id("my-orders-listing"));
-            var orders=ordersTable.FindElementsByIdPart("order-id");
-            foreach(var order in orders)
+            var ordersTable = this.Chrome.FindElement(By.Id("my-orders-listing"));
+            var orders = ordersTable.FindElementsByIdPart("order-id");
+            foreach (var order in orders)
             {
-                var detailsLink=order.FindElementByInnerText("a", "Szczegóły");
-                var detailsLinkAddress= detailsLink.GetAttribute("href");
+                var detailsLink = order.FindElementByInnerText("a", "Szczegóły");
+                var detailsLinkAddress = detailsLink.GetAttribute("href");
                 string purchaseId = detailsLinkAddress.Substring(detailsLinkAddress.LastIndexOf("/"));
                 Purchase purchase = new Purchase(purchaseId);
                 result.Add(purchase);

@@ -7,6 +7,7 @@ namespace ProductivityTools.Allegro.Selenium.Model
     public class Purchase
     {
         public string PurchaseId { get; set; }
+        public string DeliveryAddress { get; set; }
         public List<PurchaseItem> Items { get; set; }
 
         public Purchase(string purchaseId)
