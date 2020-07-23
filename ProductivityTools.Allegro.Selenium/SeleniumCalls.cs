@@ -38,6 +38,16 @@ namespace ProductivityTools.Allegro.Selenium
             var deliveryAddresField = detailsContainer.FindElement(By.Id("delivery-address"));
             purchase.DeliveryAddress = deliveryAddresField.InnerText();
 
+            var phoneField = detailsContainer.FindElementByMultipleClass("mqway y1hv2 _s8izy");
+            purchase.ReceipmentPhone = phoneField.InnerText();
+
+            var sellerField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _1nucm");
+            purchase.SellerName = sellerField[0].InnerText();
+            purchase.SellerAddres = sellerField[1].InnerText();
+            var sellerContactField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _umw2u");
+            purchase.SellerPhone = sellerContactField[0].InnerText();
+            purchase.SellerEmail = sellerContactField[1].InnerText();
+
             Console.WriteLine();
 
         }
@@ -50,6 +60,9 @@ namespace ProductivityTools.Allegro.Selenium
             foreach (var titleBox in titleboxes)
             {
                 PurchaseItem item = new PurchaseItem();
+                result.Add(item);
+
+
                 var title = titleBox.FindElement(By.TagName("Span"));
                 item.Name = title.InnerHtml();
 
@@ -57,7 +70,6 @@ namespace ProductivityTools.Allegro.Selenium
                 var amount = amountAndPrice.InnerText();
                 item.Amount = int.Parse(amount.Substring(0, amount.IndexOf('x')).Trim());
                 item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
-
             }
             return result;
         }
