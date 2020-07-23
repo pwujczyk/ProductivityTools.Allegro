@@ -14,6 +14,7 @@ namespace ProductivityTools.Allegro.Selenium.Model
         public string SellerAddres { get; set; }
         public string SellerPhone { get; set; }
         public string SellerEmail { get; set; }
+        public string Status { get; set; }
 
         public Purchase(string purchaseId)
         {

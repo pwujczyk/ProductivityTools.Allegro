@@ -34,13 +34,17 @@ namespace ProductivityTools.Allegro.Selenium
             var detailsContainer = this.Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
             purchase.Items = GetPurchaseItems(detailsContainer);
 
+            var statusField = detailsContainer.FindElementByMultipleClass("w1eai trz41");
+            purchase.Status = statusField.InnerText();
 
-            var deliveryAddresField = detailsContainer.FindElement(By.Id("delivery-address"));
-            purchase.DeliveryAddress = deliveryAddresField.InnerText();
+            if (detailsContainer.FindElements(By.Id("delivery-address")).Count > 0)
+            {
+                var deliveryAddresField = detailsContainer.FindElement(By.Id("delivery-address"));
+                purchase.DeliveryAddress = deliveryAddresField.InnerText();
 
-            var phoneField = detailsContainer.FindElementByMultipleClass("mqway y1hv2 _s8izy");
-            purchase.ReceipmentPhone = phoneField.InnerText();
-
+                var phoneField = detailsContainer.FindElementByMultipleClass("mqway y1hv2 _s8izy");
+                purchase.ReceipmentPhone = phoneField.InnerText();
+            }
             var sellerField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _1nucm");
             purchase.SellerName = sellerField[0].InnerText();
             purchase.SellerAddres = sellerField[1].InnerText();
