@@ -16,6 +16,13 @@ namespace ProductivityTools.Allegro.Selenium.Model
         public string SellerEmail { get; set; }
         public string Status { get; set; }
 
+        public DateTime DeliveryDate { get; set; }
+        public string DeliveryNumber { get; set; }
+
+        public DateTime PaymentDate { get; set; }
+        public string PaymentAmount{ get; set; }
+        public string PaymentType { get; set; }
+
         public Purchase(string purchaseId)
         {
             this.PurchaseId = purchaseId;

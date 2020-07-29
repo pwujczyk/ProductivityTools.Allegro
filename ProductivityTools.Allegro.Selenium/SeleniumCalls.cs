@@ -52,6 +52,23 @@ namespace ProductivityTools.Allegro.Selenium
             purchase.SellerPhone = sellerContactField[0].InnerText();
             purchase.SellerEmail = sellerContactField[1].InnerText();
 
+            //DeliveryDate
+            var deliveryStatusElement = detailsContainer.FindElementByMultipleClass("ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph");
+            var deliveryDatex = deliveryStatusElement.InnerHtml();
+
+            //DeliveryNumber
+            var deliveryId = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
+            var xx = deliveryId.InnerHtml();
+
+            //public DateTime PaymentDate { get; set; }
+            var payment = detailsContainer.FindElementByMultipleClass("_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm");
+            var xx2 = payment.InnerHtml();
+
+            //public string PaymentAmount { get; set; }
+            //public string PaymentType { get; set; }
+
+
+
             Console.WriteLine();
 
         }
