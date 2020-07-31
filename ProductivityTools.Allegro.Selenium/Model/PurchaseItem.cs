@@ -16,7 +16,5 @@ namespace ProductivityTools.Allegro.Selenium.Model
                 return SinglePrice * Amount;
             }
         }
-
-
     }
 }

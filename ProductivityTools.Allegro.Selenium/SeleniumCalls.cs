@@ -5,6 +5,7 @@ using ProductivityTools.Allegro.Selenium.Model;
 using ProductivityTools.SeleniumExtensions;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
 namespace ProductivityTools.Allegro.Selenium
@@ -53,17 +54,25 @@ namespace ProductivityTools.Allegro.Selenium
             purchase.SellerEmail = sellerContactField[1].InnerText();
 
             //DeliveryDate
-            var deliveryStatusElement = detailsContainer.FindElementByMultipleClass("ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph");
-            var deliveryDatex = deliveryStatusElement.InnerHtml();
+            string deliveryStatusCss = "ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph";
+            if (detailsContainer.FindElementsByMultipleClass(deliveryStatusCss).Count > 0)
+            {
+                var deliveryStatusElement = detailsContainer.FindElementByMultipleClass(deliveryStatusCss);
+                var deliveryDatex = deliveryStatusElement.InnerHtml();
 
-            //DeliveryNumber
-            var deliveryId = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
-            var xx = deliveryId.InnerHtml();
+                //DeliveryNumber
+                var deliveryId = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
+                var xx = deliveryId.InnerHtml();
+            }
+
+            string paymentCss = "_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm";
 
             //public DateTime PaymentDate { get; set; }
-            var payment = detailsContainer.FindElementByMultipleClass("_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm");
-            var xx2 = payment.InnerHtml();
-
+            if (detailsContainer.FindElementsByMultipleClass(paymentCss).Count > 0)
+            {
+                var payment = detailsContainer.FindElementByMultipleClass("_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm");
+                var xx2 = payment.InnerHtml();
+            }
             //public string PaymentAmount { get; set; }
             //public string PaymentType { get; set; }
 
