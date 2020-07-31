@@ -18,6 +18,7 @@ namespace ProductivityTools.Allegro.Selenium.Model
 
         public DateTime DeliveryDate { get; set; }
         public string DeliveryNumber { get; set; }
+        public string DeliveryStatus { get; set; }
 
         public DateTime PaymentDate { get; set; }
         public string PaymentAmount{ get; set; }

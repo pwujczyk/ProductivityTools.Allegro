@@ -58,20 +58,29 @@ namespace ProductivityTools.Allegro.Selenium
             if (detailsContainer.FindElementsByMultipleClass(deliveryStatusCss).Count > 0)
             {
                 var deliveryStatusElement = detailsContainer.FindElementByMultipleClass(deliveryStatusCss);
-                var deliveryDatex = deliveryStatusElement.InnerHtml();
+                purchase.DeliveryStatus = deliveryStatusElement.Text;
 
                 //DeliveryNumber
-                var deliveryId = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
-                var xx = deliveryId.InnerHtml();
+                var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
+                var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
+                purchase.DeliveryNumber = deliveryIdSpan.Text;
             }
 
             string paymentCss = "_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm";
-
+            var paymentbox = detailsContainer.FindElement(By.Id("opbox-myorder-payment"));
             //public DateTime PaymentDate { get; set; }
-            if (detailsContainer.FindElementsByMultipleClass(paymentCss).Count > 0)
+            if (paymentbox.FindElementsByMultipleClass(paymentCss).Count > 0)
             {
-                var payment = detailsContainer.FindElementByMultipleClass("_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm");
-                var xx2 = payment.InnerHtml();
+                var paymentMethodAll = paymentbox.FindElementByInnerText("div","Metoda płatności",true);
+                //to be done
+                var paymentMethod = paymentMethodAll.FindElements(By.TagName("p"));
+                purchase.PaymentType = paymentMethod.InnersText();
+                // var paymentType= paymentMethod.Text;
+
+
+                var paymentAmount = paymentbox.FindElementByMultipleClass("_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm");
+                var xfdsafa = paymentAmount.InnerText();
+                var fdsadf = paymentAmount.InnerHtml();
             }
             //public string PaymentAmount { get; set; }
             //public string PaymentType { get; set; }
