@@ -5,6 +5,7 @@ using ProductivityTools.Allegro.Selenium.Model;
 using ProductivityTools.SeleniumExtensions;
 using System;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
@@ -71,16 +72,21 @@ namespace ProductivityTools.Allegro.Selenium
             //public DateTime PaymentDate { get; set; }
             if (paymentbox.FindElementsByMultipleClass(paymentCss).Count > 0)
             {
-                var paymentMethodAll = paymentbox.FindElementByInnerText("div","Metoda płatności",true);
-                //to be done
-                var paymentMethod = paymentMethodAll.FindElements(By.TagName("p"));
-                purchase.PaymentType = paymentMethod.InnersText();
-                // var paymentType= paymentMethod.Text;
+                Func<string, string> GetValueUnderHeader = (s) =>
+                       {
+                           var valueMethodLabel = paymentbox.FindElementByInnerText("div", s, true);
+                           if (valueMethodLabel == null) return null;
+                           var valueMethodBox = valueMethodLabel.Parent();
+                           var paragraphs = valueMethodBox.FindElements(By.TagName("p"));
+                           var r = paragraphs.InnersText();
+                           return r;
+                       };
 
-
-                var paymentAmount = paymentbox.FindElementByMultipleClass("_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm");
-                var xfdsafa = paymentAmount.InnerText();
-                var fdsadf = paymentAmount.InnerHtml();
+                purchase.PaymentType = GetValueUnderHeader("Metoda płatności");
+                purchase.PaymentStatus = GetValueUnderHeader("Status płatności");
+                var kwotaWplaty = GetValueUnderHeader("Kwota wpłaty");
+                purchase.PaymentAmount = kwotaWplaty == null ? null :(decimal?)decimal.Parse(kwotaWplaty);
+                purchase.PaymentDate = DateTime.Parse(GetValueUnderHeader("Data zakończenia płatności"));
             }
             //public string PaymentAmount { get; set; }
             //public string PaymentType { get; set; }

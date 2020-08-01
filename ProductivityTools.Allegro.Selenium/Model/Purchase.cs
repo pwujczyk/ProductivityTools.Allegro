@@ -21,8 +21,9 @@ namespace ProductivityTools.Allegro.Selenium.Model
         public string DeliveryStatus { get; set; }
 
         public DateTime PaymentDate { get; set; }
-        public string PaymentAmount{ get; set; }
+        public decimal? PaymentAmount{ get; set; }
         public string PaymentType { get; set; }
+        public string PaymentStatus { get; set; }
 
         public Purchase(string purchaseId)
         {
