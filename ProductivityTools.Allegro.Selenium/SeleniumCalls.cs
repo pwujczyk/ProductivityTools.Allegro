@@ -30,94 +30,125 @@ namespace ProductivityTools.Allegro.Selenium
             }
         }
 
+        private class FillPurchaseClass
+        {
+            private Purchase Purchase;
+            private IWebElement detailsContainer;
+
+            public FillPurchaseClass(IWebDriver Chrome, Purchase purchase)
+            {
+                this.Purchase = purchase;
+                Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
+                detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
+                GetPurchaseItems();
+                var statusField = detailsContainer.FindElementByMultipleClass("w1eai trz41");
+                purchase.Status = statusField.InnerText();
+             
+                FillSeller();
+                FillDelivery(); 
+                FillPayment();
+            }
+
+            private void FillSeller()
+            {
+                var sellerField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _1nucm");
+                Purchase.SellerName = sellerField[0].InnerText();
+                Purchase.SellerAddres = sellerField[1].InnerText();
+                var sellerContactField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _umw2u");
+                Purchase.SellerPhone = sellerContactField[0].InnerText();
+                Purchase.SellerEmail = sellerContactField[1].InnerText();
+            }
+
+            private void FillDelivery()
+            {
+                if (detailsContainer.FindElements(By.Id("delivery-address")).Count > 0)
+                {
+                    var deliveryAddresField = detailsContainer.FindElement(By.Id("delivery-address"));
+                    Purchase.DeliveryAddress = deliveryAddresField.InnerText();
+
+                    var phoneField = detailsContainer.FindElementByMultipleClass("mqway y1hv2 _s8izy");
+                    Purchase.ReceipmentPhone = phoneField.InnerText();
+                }
+
+                //DeliveryDate
+                string deliveryStatusCss = "ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph";
+                if (detailsContainer.FindElementsByMultipleClass(deliveryStatusCss).Count > 0)
+                {
+                    var deliveryStatusElement = detailsContainer.FindElementByMultipleClass(deliveryStatusCss);
+                    Purchase.DeliveryStatus = deliveryStatusElement.Text;
+
+                    //DeliveryNumber
+                    var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
+                    var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
+                    Purchase.DeliveryNumber = deliveryIdSpan.Text;
+                }
+            }
+
+            private void FillPayment()
+            {
+                string paymentCss = "_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm";
+                var paymentbox = detailsContainer.FindElement(By.Id("opbox-myorder-payment"));
+                if (paymentbox.FindElementsByMultipleClass(paymentCss).Count > 0)
+                {
+                    Func<string, string, string> GetValueUnderHeader = (s, tag) =>
+                    {
+                        var valueMethodLabel = paymentbox.FindElementByInnerText("div", s, true);
+                        if (valueMethodLabel == null) return null;
+                        var valueMethodBox = valueMethodLabel.Parent();
+                        var debug = valueMethodBox.InnerHtml();
+                        var paragraphs = valueMethodBox.FindElements(By.TagName(tag));
+                        var r = paragraphs.InnersText();
+                        return r;
+                    };
+
+                    Purchase.PaymentType = GetValueUnderHeader("Metoda płatności", "p");
+                    Purchase.PaymentStatus = GetValueUnderHeader("Status płatności", "p");
+                    if (Purchase.PaymentStatus.Trim() == "Płatność zakończona")
+                    {
+                        var kwotaWplaty = GetValueUnderHeader("Kwota wpłaty", "span").Replace("zł", "").Replace(" ", "");
+                        Purchase.PaymentAmount = kwotaWplaty == null ? null : (decimal?)decimal.Parse(kwotaWplaty);
+                        Purchase.PaymentDate = DateTime.Parse(GetValueUnderHeader("Data zakończenia płatności", "p"));
+                    }
+                }
+            }
+
+            private void GetPurchaseItems()
+            {
+                List<PurchaseItem> result = new List<PurchaseItem>();
+
+                var titleboxes = detailsContainer.FindElementsByMultipleClass("p15b4 _3kk7b _vnd3k _1plx6");
+                foreach (var titleBox in titleboxes)
+                {
+                    PurchaseItem item = new PurchaseItem();
+                    result.Add(item);
+
+
+                    var title = titleBox.FindElement(By.TagName("Span"));
+                    item.Name = title.InnerHtml();
+
+                    var amountAndPrice = titleBox.FindElementByMultipleClass("c1npm trz41 _3kk7b _t0xzz _1t6t8");
+                    var amount = amountAndPrice.InnerText();
+                    item.Amount = int.Parse(amount.Substring(0, amount.IndexOf('x')).Trim());
+                    item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
+                }
+                this.Purchase.Items = result;
+            }
+        }
+
         private void FillPurchase(Purchase purchase)
         {
-            this.Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
-            var detailsContainer = this.Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
-            purchase.Items = GetPurchaseItems(detailsContainer);
+           
 
-            var statusField = detailsContainer.FindElementByMultipleClass("w1eai trz41");
-            purchase.Status = statusField.InnerText();
+         
 
-            if (detailsContainer.FindElements(By.Id("delivery-address")).Count > 0)
-            {
-                var deliveryAddresField = detailsContainer.FindElement(By.Id("delivery-address"));
-                purchase.DeliveryAddress = deliveryAddresField.InnerText();
-
-                var phoneField = detailsContainer.FindElementByMultipleClass("mqway y1hv2 _s8izy");
-                purchase.ReceipmentPhone = phoneField.InnerText();
-            }
-            var sellerField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _1nucm");
-            purchase.SellerName = sellerField[0].InnerText();
-            purchase.SellerAddres = sellerField[1].InnerText();
-            var sellerContactField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _umw2u");
-            purchase.SellerPhone = sellerContactField[0].InnerText();
-            purchase.SellerEmail = sellerContactField[1].InnerText();
-
-            //DeliveryDate
-            string deliveryStatusCss = "ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph";
-            if (detailsContainer.FindElementsByMultipleClass(deliveryStatusCss).Count > 0)
-            {
-                var deliveryStatusElement = detailsContainer.FindElementByMultipleClass(deliveryStatusCss);
-                purchase.DeliveryStatus = deliveryStatusElement.Text;
-
-                //DeliveryNumber
-                var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
-                var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
-                purchase.DeliveryNumber = deliveryIdSpan.Text;
-            }
-
-            string paymentCss = "_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm";
-            var paymentbox = detailsContainer.FindElement(By.Id("opbox-myorder-payment"));
-            //public DateTime PaymentDate { get; set; }
-            if (paymentbox.FindElementsByMultipleClass(paymentCss).Count > 0)
-            {
-                Func<string, string> GetValueUnderHeader = (s) =>
-                       {
-                           var valueMethodLabel = paymentbox.FindElementByInnerText("div", s, true);
-                           if (valueMethodLabel == null) return null;
-                           var valueMethodBox = valueMethodLabel.Parent();
-                           var paragraphs = valueMethodBox.FindElements(By.TagName("p"));
-                           var r = paragraphs.InnersText();
-                           return r;
-                       };
-
-                purchase.PaymentType = GetValueUnderHeader("Metoda płatności");
-                purchase.PaymentStatus = GetValueUnderHeader("Status płatności");
-                var kwotaWplaty = GetValueUnderHeader("Kwota wpłaty");
-                purchase.PaymentAmount = kwotaWplaty == null ? null :(decimal?)decimal.Parse(kwotaWplaty);
-                purchase.PaymentDate = DateTime.Parse(GetValueUnderHeader("Data zakończenia płatności"));
-            }
-            //public string PaymentAmount { get; set; }
-            //public string PaymentType { get; set; }
-
+          
 
 
             Console.WriteLine();
 
         }
 
-        private List<PurchaseItem> GetPurchaseItems(IWebElement detailsContainer)
-        {
-            List<PurchaseItem> result = new List<PurchaseItem>();
-
-            var titleboxes = detailsContainer.FindElementsByMultipleClass("p15b4 _3kk7b _vnd3k _1plx6");
-            foreach (var titleBox in titleboxes)
-            {
-                PurchaseItem item = new PurchaseItem();
-                result.Add(item);
-
-
-                var title = titleBox.FindElement(By.TagName("Span"));
-                item.Name = title.InnerHtml();
-
-                var amountAndPrice = titleBox.FindElementByMultipleClass("c1npm trz41 _3kk7b _t0xzz _1t6t8");
-                var amount = amountAndPrice.InnerText();
-                item.Amount = int.Parse(amount.Substring(0, amount.IndexOf('x')).Trim());
-                item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
-            }
-            return result;
-        }
+      
 
         public List<Purchase> GetPurchasesItems()
         {
