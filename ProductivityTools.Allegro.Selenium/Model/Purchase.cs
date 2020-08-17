@@ -16,9 +16,7 @@ namespace ProductivityTools.Allegro.Selenium.Model
         public string SellerEmail { get; set; }
         public string Status { get; set; }
 
-        public DateTime DeliveryDate { get; set; }
-        public string DeliveryNumber { get; set; }
-        public string DeliveryStatus { get; set; }
+        public List<Delivery> Delivery { get; set; }
 
         public DateTime PaymentDate { get; set; }
         public decimal? PaymentAmount{ get; set; }
@@ -28,6 +26,7 @@ namespace ProductivityTools.Allegro.Selenium.Model
         public Purchase(string purchaseId)
         {
             this.PurchaseId = purchaseId;
+            Delivery = new List<Delivery>();
         }
     }
 }

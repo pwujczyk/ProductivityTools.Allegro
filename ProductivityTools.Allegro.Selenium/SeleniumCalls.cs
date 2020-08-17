@@ -40,12 +40,12 @@ namespace ProductivityTools.Allegro.Selenium
                 this.Purchase = purchase;
                 Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
                 detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
-                GetPurchaseItems();
+                // GetPurchaseItems();
                 var statusField = detailsContainer.FindElementByMultipleClass("w1eai trz41");
                 purchase.Status = statusField.InnerText();
-             
+
                 FillSeller();
-                FillDelivery(); 
+                FillDelivery();
                 FillPayment();
             }
 
@@ -71,17 +71,34 @@ namespace ProductivityTools.Allegro.Selenium
                 }
 
                 //DeliveryDate
-                string deliveryStatusCss = "ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph";
-                if (detailsContainer.FindElementsByMultipleClass(deliveryStatusCss).Count > 0)
+                string deliverySectionSelector = "_1jtqp _3kk7b _vnd3k _1plx6";
+                var deliverySectionElements = detailsContainer.FindElementsByMultipleClass(deliverySectionSelector);
+                if (deliverySectionElements.Count > 0)
                 {
-                    var deliveryStatusElement = detailsContainer.FindElementByMultipleClass(deliveryStatusCss);
-                    Purchase.DeliveryStatus = deliveryStatusElement.Text;
+                    foreach(var deliverySectionElement in deliverySectionElements)
+                    {
+                        string deliveryStatusSelector = "ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph";
+                        var deliveryStatusElements = deliverySectionElement.FindElementsByMultipleClass(deliveryStatusSelector);
+                        if (deliveryStatusElements.Count > 0)
+                        {
+                            var deliveryStatusElement = detailsContainer.FindElementsByMultipleClass(deliveryStatusSelector);
+                            foreach (var deliveryStatus in deliveryStatusElement)
+                            {
+                                var delivery = new Delivery();
+                                Purchase.Delivery.Add(delivery);
+                                delivery.DeliveryStatus = deliveryStatus.Text;
 
-                    //DeliveryNumber
-                    var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
-                    var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
-                    Purchase.DeliveryNumber = deliveryIdSpan.Text;
+                                //DeliveryNumber
+                                //var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
+                                var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _1nucm");
+                                var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
+                                Purchase.DeliveryNumber = deliveryIdSpan.Text;
+                            }
+                        }
+                    }
                 }
+               
+              
             }
 
             private void FillPayment()
@@ -137,18 +154,11 @@ namespace ProductivityTools.Allegro.Selenium
 
         private void FillPurchase(Purchase purchase)
         {
-           
-
-         
-
-          
-
-
+            FillPurchaseClass fillPurchase = new FillPurchaseClass(this.Chrome, purchase);
             Console.WriteLine();
-
         }
 
-      
+
 
         public List<Purchase> GetPurchasesItems()
         {
