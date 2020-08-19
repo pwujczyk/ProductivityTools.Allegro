@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace ProductivityTools.Allegro.Selenium
@@ -171,15 +172,19 @@ namespace ProductivityTools.Allegro.Selenium
                 if (returnSectionElements.Count > 0)
                 {
                     var returnSectionElement = returnSectionElements[0];
-                    var returnNumber = returnSectionElement.FindElements(By.TagName("a"));
-                    if (returnNumber.Count > 0)
+                    var returnNumberElement = returnSectionElement.FindElements(By.TagName("a"));
+                    
+                    if (returnNumberElement.Count > 0)
                     {
-                        returnNumber[0].Click();
+                        this.Purchase.Return.Id = returnNumberElement[0].InnerText();
+                        returnNumberElement[0].Click();
                         returnContainer = Chrome.FindElement(By.Id("no-printable-content"));
                         FillReturnItems();
                     }
                 }
             }
+
+            
 
             private void FillReturnItems()
             {
@@ -191,6 +196,27 @@ namespace ProductivityTools.Allegro.Selenium
                     this.Purchase.Return.Items.Add(purchaseItem);
                     var name= returnedElement.FindElementByMultipleClass("_xu6h2 _3kk7b _18y38 _otc6c _19orx");
                     purchaseItem.Name = name.InnerText();
+
+                    var amount = returnedElement.FindElementByMultipleClass("_3kk7b _t0xzz _knu61");
+                    var amountString = amount.InnerText();
+                    string value = Regex.Replace(amountString, "[A-Za-z ]", "");
+                    int parsedValue = int.Parse(value);
+                    purchaseItem.Amount = parsedValue;
+
+                    var wholeItemCostElement = returnedElement.FindElementByMultipleClass("_1svub _1svub _lf05o");
+                    var wholeItemCostString = wholeItemCostElement.InnerText();
+                    string wholeItemCost = Regex.Replace(wholeItemCostString, "[A-Za-zęł]", "");
+                    decimal wholeItemCostValue = decimal.Parse(wholeItemCost);
+                    purchaseItem.SinglePrice = wholeItemCostValue / purchaseItem.Amount;
+
+                    //var singleItemCostElement = returnedElement.FindElementByMultipleClass("_1svub _11245_1nV9_");
+                    //var singleItemCostString = singleItemCostElement.InnerText();
+                    //string singleItemCost = Regex.Replace(singleItemCostString, "[A-Za-zęł]", "");
+                    //decimal singleItemCostValue = decimal.Parse(singleItemCost);
+                    //purchaseItem.SinglePrice = singleItemCostValue;
+
+                    
+
                 }
             }
         }
