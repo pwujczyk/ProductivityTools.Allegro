@@ -30,6 +30,13 @@ namespace ProductivityTools.Allegro.Selenium
             }
         }
 
+        private void FillPurchase(Purchase purchase)
+        {
+            new FillPurchaseClass(this.Chrome, purchase);
+            new FillReturnClass(this.Chrome, purchase);
+            Console.WriteLine();
+        }
+
         private class FillPurchaseClass
         {
             private Purchase Purchase;
@@ -40,7 +47,8 @@ namespace ProductivityTools.Allegro.Selenium
                 this.Purchase = purchase;
                 Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
                 detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
-                // GetPurchaseItems();
+
+                GetPurchaseItems();
                 var statusField = detailsContainer.FindElementByMultipleClass("w1eai trz41");
                 purchase.Status = statusField.InnerText();
 
@@ -97,9 +105,6 @@ namespace ProductivityTools.Allegro.Selenium
                 }
             }
 
-
-
-
             private void FillPayment()
             {
                 string paymentCss = "_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm";
@@ -128,7 +133,6 @@ namespace ProductivityTools.Allegro.Selenium
                 }
             }
 
-
             private void GetPurchaseItems()
             {
                 List<PurchaseItem> result = new List<PurchaseItem>();
@@ -152,15 +156,40 @@ namespace ProductivityTools.Allegro.Selenium
             }
         }
 
-
-        private void FillPurchase(Purchase purchase)
+        private class FillReturnClass
         {
-            FillPurchaseClass fillPurchase = new FillPurchaseClass(this.Chrome, purchase);
-            Console.WriteLine();
+            private Purchase Purchase;
+            private IWebElement returnContainer;
+
+            public FillReturnClass(IWebDriver Chrome, Purchase purchase)
+            {
+                this.Purchase = purchase;
+                Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
+                var detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
+                string returnSectionSelector = "opbox-myorder-returns";
+                var returnSectionElements = detailsContainer.FindElements(By.Id(returnSectionSelector));
+                if (returnSectionElements.Count > 0)
+                {
+                    var returnSectionElement = returnSectionElements[0];
+                    var returnNumber = returnSectionElement.FindElements(By.TagName("a"));
+                    if (returnNumber.Count > 0)
+                    {
+                        returnNumber[0].Click();
+                        returnContainer = Chrome.FindElement(By.Id("no-printable-content"));
+                        FillReturnItems();
+                    }
+                }
+            }
+
+            private void FillReturnItems()
+            {
+                Thread.Sleep(1000);
+                var x = returnContainer.FindElementsByMultipleClass("_11245_1bzGV _1yyhi");
+
+            }
         }
 
-
-
+ 
         public List<Purchase> GetPurchasesItems()
         {
             var result = new List<Purchase>();
@@ -180,7 +209,6 @@ namespace ProductivityTools.Allegro.Selenium
 
             return result;
         }
-
         public void Login(string login, string password)
         {
             this.Chrome.Url = Addresses.LoginPage;
