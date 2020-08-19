@@ -75,31 +75,30 @@ namespace ProductivityTools.Allegro.Selenium
                 var deliverySectionElements = detailsContainer.FindElementsByMultipleClass(deliverySectionSelector);
                 if (deliverySectionElements.Count > 0)
                 {
-                    foreach(var deliverySectionElement in deliverySectionElements)
+                    foreach (var deliverySectionElement in deliverySectionElements)
                     {
+                        var delivery = new Delivery();
+                        Purchase.Delivery.Add(delivery);
+
                         string deliveryStatusSelector = "ls2xj2 tl1r7i pe6nb p15b4 m3cbb ptrkmx tlr0ph";
                         var deliveryStatusElements = deliverySectionElement.FindElementsByMultipleClass(deliveryStatusSelector);
                         if (deliveryStatusElements.Count > 0)
                         {
-                            var deliveryStatusElement = detailsContainer.FindElementsByMultipleClass(deliveryStatusSelector);
-                            foreach (var deliveryStatus in deliveryStatusElement)
-                            {
-                                var delivery = new Delivery();
-                                Purchase.Delivery.Add(delivery);
-                                delivery.DeliveryStatus = deliveryStatus.Text;
+                            var deliveryStatusElement = deliverySectionElement.FindElementByMultipleClass(deliveryStatusSelector);
+                            delivery.DeliveryStatus = deliveryStatusElement.Text;
 
-                                //DeliveryNumber
-                                //var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
-                                var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _1nucm");
-                                var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
-                                Purchase.DeliveryNumber = deliveryIdSpan.Text;
-                            }
+                            //DeliveryNumber
+                            var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
+                            //var deliveryIdCombo = deliverySectionElement.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _1nucm");
+                            var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
+                            delivery.DeliveryNumber = deliveryIdSpan.Text;
                         }
                     }
                 }
-               
-              
             }
+
+
+
 
             private void FillPayment()
             {
@@ -129,6 +128,7 @@ namespace ProductivityTools.Allegro.Selenium
                 }
             }
 
+
             private void GetPurchaseItems()
             {
                 List<PurchaseItem> result = new List<PurchaseItem>();
@@ -151,6 +151,7 @@ namespace ProductivityTools.Allegro.Selenium
                 this.Purchase.Items = result;
             }
         }
+
 
         private void FillPurchase(Purchase purchase)
         {
