@@ -22,11 +22,13 @@ namespace ProductivityTools.Allegro.Selenium.Model
         public decimal? PaymentAmount{ get; set; }
         public string PaymentType { get; set; }
         public string PaymentStatus { get; set; }
+        public Return Return { get; set; }
 
         public Purchase(string purchaseId)
         {
             this.PurchaseId = purchaseId;
             Delivery = new List<Delivery>();
+            this.Return = new Return();
         }
     }
 }

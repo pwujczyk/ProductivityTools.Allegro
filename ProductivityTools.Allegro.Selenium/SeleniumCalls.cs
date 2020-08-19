@@ -184,8 +184,14 @@ namespace ProductivityTools.Allegro.Selenium
             private void FillReturnItems()
             {
                 Thread.Sleep(1000);
-                var x = returnContainer.FindElementsByMultipleClass("_11245_1bzGV _1yyhi");
-
+                var returnedElements = returnContainer.FindElementsByMultipleClass("_11245_1bzGV _1yyhi");
+                foreach(var returnedElement in returnedElements)
+                {
+                    var purchaseItem = new PurchaseItem();
+                    this.Purchase.Return.Items.Add(purchaseItem);
+                    var name= returnedElement.FindElementByMultipleClass("_xu6h2 _3kk7b _18y38 _otc6c _19orx");
+                    purchaseItem.Name = name.InnerText();
+                }
             }
         }
 
