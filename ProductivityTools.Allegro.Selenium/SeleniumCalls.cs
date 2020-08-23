@@ -61,11 +61,11 @@ namespace ProductivityTools.Allegro.Selenium
             private void FillSeller()
             {
                 var sellerField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _1nucm");
-                Purchase.SellerName = sellerField[0].InnerText();
-                Purchase.SellerAddres = sellerField[1].InnerText();
+                Purchase.Dealer.Name = sellerField[0].InnerText();
+                Purchase.Dealer.Address = sellerField[1].InnerText();
                 var sellerContactField = detailsContainer.FindElementsByMultipleClass("_3kk7b _vnd3k _1h8s6 _umw2u");
-                Purchase.SellerPhone = sellerContactField[0].InnerText();
-                Purchase.SellerEmail = sellerContactField[1].InnerText();
+                Purchase.Dealer.Phone = sellerContactField[0].InnerText();
+                Purchase.Dealer.Email = sellerContactField[1].InnerText();
             }
 
             private void FillDelivery()
@@ -123,13 +123,13 @@ namespace ProductivityTools.Allegro.Selenium
                         return r;
                     };
 
-                    Purchase.PaymentType = GetValueUnderHeader("Metoda płatności", "p");
-                    Purchase.PaymentStatus = GetValueUnderHeader("Status płatności", "p");
-                    if (Purchase.PaymentStatus.Trim() == "Płatność zakończona")
+                    Purchase.Payment.Type = GetValueUnderHeader("Metoda płatności", "p");
+                    Purchase.Payment.Status = GetValueUnderHeader("Status płatności", "p");
+                    if (Purchase.Payment.Status.Trim() == "Płatność zakończona")
                     {
                         var kwotaWplaty = GetValueUnderHeader("Kwota wpłaty", "span").Replace("zł", "").Replace(" ", "");
-                        Purchase.PaymentAmount = kwotaWplaty == null ? null : (decimal?)decimal.Parse(kwotaWplaty);
-                        Purchase.PaymentDate = DateTime.Parse(GetValueUnderHeader("Data zakończenia płatności", "p"));
+                        Purchase.Payment.Amount = kwotaWplaty == null ? null : (decimal?)decimal.Parse(kwotaWplaty);
+                        Purchase.Payment.Date = DateTime.Parse(GetValueUnderHeader("Data zakończenia płatności", "p"));
                     }
                 }
             }
@@ -165,7 +165,6 @@ namespace ProductivityTools.Allegro.Selenium
             public FillReturnClass(IWebDriver Chrome, Purchase purchase)
             {
                 this.Purchase = purchase;
-                Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
                 var detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
                 string returnSectionSelector = "opbox-myorder-returns";
                 var returnSectionElements = detailsContainer.FindElements(By.Id(returnSectionSelector));
@@ -176,6 +175,7 @@ namespace ProductivityTools.Allegro.Selenium
                     
                     if (returnNumberElement.Count > 0)
                     {
+                        this.Purchase.Return = new Return();
                         this.Purchase.Return.Id = returnNumberElement[0].InnerText();
                         returnNumberElement[0].Click();
                         returnContainer = Chrome.FindElement(By.Id("no-printable-content"));
