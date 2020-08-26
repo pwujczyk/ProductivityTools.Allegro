@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Serialization;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using ProductivityTools.Allegro.Selenium.Model;
+using ProductivityTools.Purchases.Contract;
 using ProductivityTools.SeleniumExtensions;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Net.WebSockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
+
 
 namespace ProductivityTools.Allegro.Selenium
 {
@@ -46,7 +47,7 @@ namespace ProductivityTools.Allegro.Selenium
             public FillPurchaseClass(IWebDriver Chrome, Purchase purchase)
             {
                 this.Purchase = purchase;
-                Chrome.Url = $"{Addresses.Purchased}/{purchase.PurchaseId}";
+                Chrome.Url = $"{Addresses.Purchased}/{purchase.Id}";
                 detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
 
                 GetPurchaseItems();
@@ -94,13 +95,13 @@ namespace ProductivityTools.Allegro.Selenium
                         if (deliveryStatusElements.Count > 0)
                         {
                             var deliveryStatusElement = deliverySectionElement.FindElementByMultipleClass(deliveryStatusSelector);
-                            delivery.DeliveryStatus = deliveryStatusElement.Text;
+                            delivery.Status = deliveryStatusElement.Text;
 
                             //DeliveryNumber
                             var deliveryIdCombo = detailsContainer.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _alw8w");
                             //var deliveryIdCombo = deliverySectionElement.FindElementByMultipleClass("_ydq9t _3kk7b _vnd3k _1h8s6 _1nucm");
                             var deliveryIdSpan = deliveryIdCombo.FindElement(By.TagName("span"));
-                            delivery.DeliveryNumber = deliveryIdSpan.Text;
+                            delivery.Number = deliveryIdSpan.Text;
                         }
                     }
                 }
@@ -144,9 +145,6 @@ namespace ProductivityTools.Allegro.Selenium
                     var divs = titleBox.FindElements(By.TagName("div"));
                     PurchaseItem item = new PurchaseItem();
                     result.Add(item);
-
-     
-
 
                     var title = titleBox.FindElement(By.TagName("Span"));
                     item.Name = divs[1].InnerText();
@@ -223,8 +221,8 @@ namespace ProductivityTools.Allegro.Selenium
                     
                     if (returnNumberElement.Count > 0)
                     {
-                        this.Purchase.Return = new Return();
-                        this.Purchase.Return.Id = returnNumberElement[0].InnerText();
+                        //this.Purchase.Return = new Purchase.Contract.Return();
+                        //this.Purchase.Return.Id = returnNumberElement[0].InnerText();
                         returnNumberElement[0].Click();
                         returnContainer = Chrome.FindElement(By.Id("no-printable-content"));
                         FillReturnItems();
@@ -241,7 +239,7 @@ namespace ProductivityTools.Allegro.Selenium
                 foreach(var returnedElement in returnedElements)
                 {
                     var purchaseItem = new PurchaseItem();
-                    this.Purchase.Return.Items.Add(purchaseItem);
+                   // this.Purchase.Return.Items.Add(purchaseItem);
                     var name= returnedElement.FindElementByMultipleClass("_xu6h2 _3kk7b _18y38 _otc6c _19orx");
                     purchaseItem.Name = name.InnerText();
 
