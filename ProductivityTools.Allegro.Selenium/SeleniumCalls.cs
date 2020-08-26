@@ -138,22 +138,70 @@ namespace ProductivityTools.Allegro.Selenium
             {
                 List<PurchaseItem> result = new List<PurchaseItem>();
 
-                var titleboxes = detailsContainer.FindElementsByMultipleClass("p15b4 _3kk7b _vnd3k _1plx6");
+                var titleboxes = detailsContainer.FindElementsByMultipleClass("m7d4y m15hg x1mt2 _1yyhi");
                 foreach (var titleBox in titleboxes)
                 {
+                    var divs = titleBox.FindElements(By.TagName("div"));
                     PurchaseItem item = new PurchaseItem();
                     result.Add(item);
 
+     
+
 
                     var title = titleBox.FindElement(By.TagName("Span"));
-                    item.Name = title.InnerHtml();
+                    item.Name = divs[1].InnerText();
 
-                    var amountAndPrice = titleBox.FindElementByMultipleClass("c1npm trz41 _3kk7b _t0xzz _1t6t8");
-                    var amount = amountAndPrice.InnerText();
+                   // var amountAndPrice = divs[3].InnerText();
+                    var amount = divs[3].InnerText();
                     item.Amount = int.Parse(amount.Substring(0, amount.IndexOf('x')).Trim());
                     item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
                 }
                 this.Purchase.Items = result;
+
+
+            //    for (int i = 0; i < titleboxes.Count; i++)
+            //    {
+            //        var titleBox = titleboxes[i];
+            //        Console.WriteLine("INNER HTML");
+            //        Console.WriteLine(titleBox.InnerHtml());
+            //        Console.WriteLine();
+            //        Console.WriteLine("INNER TEXT");
+            //        Console.WriteLine(titleBox.InnerText());
+
+            //        var divs = titleBox.FindElements(By.TagName("div"));
+            //        var name1 = divs[1].InnerText();
+            //        var name2 = divs[2].InnerText();
+            //        var name3 = divs[3].InnerText();
+            //        var price = divs[4].InnerText();
+            //        foreach(var x in divs)
+            //        {
+            //            Console.WriteLine("-=====-");
+            //            Console.WriteLine(x.InnerHtml());
+            //            Console.WriteLine("XX");
+            //            Console.WriteLine(x.InnerText());
+            //        }
+            //        var element=titleBox.FindElement(By.XPath($"//a[@class='"+"_vc293 x1c1t xxsa1 mf6ib g183x _s8izy"+"']")); ;
+            //        var innerHtml = element.InnerHtml();
+            //        var innerText = element.InnerText(true);
+            //    }
+
+            //    foreach (var titleBox in titleboxes)
+            //    {
+            //        PurchaseItem item = new PurchaseItem();
+            //        result.Add(item);
+
+            //        var x = titleBox.InnerHtml();
+
+          
+            //        var title = titleBox.FindElement(By.TagName("Span"));
+            //        item.Name = title.InnerText();
+
+            //        var amountAndPrice = titleBox.FindElementByMultipleClass("c1npm trz41 _3kk7b _t0xzz _1t6t8");
+            //        var amount = amountAndPrice.InnerText();
+            //        item.Amount = int.Parse(amount.Substring(0, amount.IndexOf('x')).Trim());
+            //        item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
+            //    }
+            //    this.Purchase.Items = result;
             }
         }
 
