@@ -3,15 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityTools.Allegro.Runner", "ProductivityTools.Allegro.Runner\ProductivityTools.Allegro.Runner.csproj", "{C902D9A5-DB29-454E-97F7-7386C349C5F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityTools.Allegro.Runner", "ProductivityTools.Allegro.Runner\ProductivityTools.Allegro.Runner.csproj", "{C902D9A5-DB29-454E-97F7-7386C349C5F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityTools.Allegro.Selenium", "ProductivityTools.Allegro.Selenium\ProductivityTools.Allegro.Selenium.csproj", "{63D134C0-8FC2-4CB0-82EF-5E9D728F605A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityTools.Allegro.Selenium", "ProductivityTools.Allegro.Selenium\ProductivityTools.Allegro.Selenium.csproj", "{63D134C0-8FC2-4CB0-82EF-5E9D728F605A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductivityTools.Allegro.App", "ProductivityTools.Allegro.App\ProductivityTools.Allegro.App.csproj", "{57834E49-82BA-4B4C-8B66-A204C160B6BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityTools.Allegro.App", "ProductivityTools.Allegro.App\ProductivityTools.Allegro.App.csproj", "{57834E49-82BA-4B4C-8B66-A204C160B6BE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityTools.SeleniumExtensions", "..\ProductivityTools.SeleniumExtensions\ProductivityTools.SeleniumExtensions\ProductivityTools.SeleniumExtensions.csproj", "{3E7C12A0-C056-4306-A0B8-CB7329F26533}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductivityTools.MasterConfiguration", "..\ProductivityTools.MasterConfiguration\ProductivityTools.MasterConfiguration\ProductivityTools.MasterConfiguration.csproj", "{93F2BF57-2804-437F-AA91-FB22F0723966}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +33,6 @@ Global
 		{3E7C12A0-C056-4306-A0B8-CB7329F26533}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E7C12A0-C056-4306-A0B8-CB7329F26533}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E7C12A0-C056-4306-A0B8-CB7329F26533}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93F2BF57-2804-437F-AA91-FB22F0723966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93F2BF57-2804-437F-AA91-FB22F0723966}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93F2BF57-2804-437F-AA91-FB22F0723966}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93F2BF57-2804-437F-AA91-FB22F0723966}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
