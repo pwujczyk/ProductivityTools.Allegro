@@ -52,7 +52,7 @@ namespace ProductivityTools.Allegro.Selenium
                 detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
 
                 GetPurchaseItems();
-                var statusField = detailsContainer.FindElementByMultipleClass("w1eai trz41");
+                var statusField = detailsContainer.FindElementByMultipleClass("_7qjq4 _1dd5x");
                 purchase.Status = statusField.InnerText();
 
                 FillSeller();
@@ -77,7 +77,7 @@ namespace ProductivityTools.Allegro.Selenium
                     var deliveryAddresField = detailsContainer.FindElement(By.Id("delivery-address"));
                     Purchase.DeliveryAddress = deliveryAddresField.InnerText();
 
-                    var phoneField = detailsContainer.FindElementByMultipleClass("mqway y1hv2 _s8izy");
+                    var phoneField = detailsContainer.FindElementByMultipleClass("_s8izy");
                     Purchase.ReceipmentPhone = phoneField.InnerText();
                 }
 
@@ -140,7 +140,7 @@ namespace ProductivityTools.Allegro.Selenium
             {
                 List<PurchaseItem> result = new List<PurchaseItem>();
 
-                var titleboxes = detailsContainer.FindElementsByMultipleClass("m7d4y m15hg x1mt2 _1yyhi");
+                var titleboxes = detailsContainer.FindElementsByMultipleClass("_35enf _1779c _hho8x _1yyhi");
                 foreach (var titleBox in titleboxes)
                 {
                     var divs = titleBox.FindElements(By.TagName("div"));
