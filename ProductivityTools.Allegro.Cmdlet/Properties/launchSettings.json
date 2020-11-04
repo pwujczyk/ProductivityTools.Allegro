@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ProductivityTools.Allegro.Cmdlet": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "commandLineArgs": "-noexit -command \"import-module d:\\GitHub\\ProductivityTools.Allegro\\ProductivityTools.Allegro.Cmdlet\\bin\\Debug\\netstandard2.0\\ProductivityTools.Allegro.Cmdlet.dll\""
+    }
+  }
+}
