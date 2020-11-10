@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProductivityTools.Allegro.Cmdlet.Commands;
+using System;
 using System.Management.Automation;
 
 namespace ProductivityTools.Allegro.Cmdlet
@@ -8,7 +9,8 @@ namespace ProductivityTools.Allegro.Cmdlet
     {
         protected override void ProcessRecord()
         {
-            Console.WriteLine("Hello"); 
+            this.AddCommand(new Get(this));
+            this.ProcessCommands();
             base.ProcessRecord();
         }
     }
