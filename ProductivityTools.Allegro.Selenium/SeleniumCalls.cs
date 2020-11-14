@@ -24,13 +24,14 @@ namespace ProductivityTools.Allegro.Selenium
             this.Chrome = new ChromeDriver(options);
         }
 
-        public void GetPurchases()
+        public List<Purchase> GetPurchases()
         {
             List<Purchase> purchases = GetPurchasesItems();
             foreach (var purchase in purchases)
             {
                 FillPurchase(purchase);
             }
+            return purchases;
         }
 
         private void FillPurchase(Purchase purchase)

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ProductivityTools.Allegro.App;
 using ProductivityTools.MasterConfiguration;
+using ProductivityTools.Purchases.Contract;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ProductivityTools.Allegro.Cmdlet.Commands
@@ -17,13 +19,17 @@ namespace ProductivityTools.Allegro.Cmdlet.Commands
         protected override void Invoke()
         {
             var configuration = new ConfigurationBuilder()
-                .AddMasterConfiguration(true)
+                .AddMasterConfiguration(force:true)
                 .Build();
             var login = configuration["Login"];
             var password = configuration["Password"];
 
             Application app = new Application();
-            app.GetPurchases(login, password);
+            var purchases=app.GetPurchases(login, password);
+            foreach(var purchase in purchases)
+            {
+                Console.Write(purchase.Items.Select(x => x.Name));
+            }
             Console.WriteLine("Hello from TimeTrackingCommandAll");
         }
     }
