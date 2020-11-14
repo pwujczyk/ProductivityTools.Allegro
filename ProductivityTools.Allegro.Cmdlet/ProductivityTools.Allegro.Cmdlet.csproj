@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProductivityTools.Allegro.App\ProductivityTools.Allegro.App.csproj" />
+    <ProjectReference Include="..\ProductivityTools.Allegro.ServiceBus\ProductivityTools.Allegro.ServiceBus.csproj" />
   </ItemGroup>
 
 </Project>

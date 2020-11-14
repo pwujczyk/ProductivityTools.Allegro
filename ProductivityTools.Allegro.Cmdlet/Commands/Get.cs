@@ -24,12 +24,16 @@ namespace ProductivityTools.Allegro.Cmdlet.Commands
             var login = configuration["Login"];
             var password = configuration["Password"];
 
-            Application app = new Application();
-            var purchases=app.GetPurchases(login, password);
-            foreach(var purchase in purchases)
-            {
-                Console.Write(purchase.Items.Select(x => x.Name));
-            }
+            ProductivityTools.Allegro.ServiceBus.ServiceBusSender sender = new ServiceBus.ServiceBusSender();
+            sender.Send();
+            //sender.send();
+
+            //Application app = new Application();
+            //var purchases=app.GetPurchases(login, password);
+            //foreach(var purchase in purchases)
+            //{
+            //    Console.Write(purchase.Items.Select(x => x.Name));
+            //}
             Console.WriteLine("Hello from TimeTrackingCommandAll");
         }
     }
