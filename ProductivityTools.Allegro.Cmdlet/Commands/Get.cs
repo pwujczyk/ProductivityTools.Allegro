@@ -25,7 +25,9 @@ namespace ProductivityTools.Allegro.Cmdlet.Commands
             var password = configuration["Password"];
 
             ProductivityTools.Allegro.ServiceBus.ServiceBusSender sender = new ServiceBus.ServiceBusSender();
-            sender.Send();
+            Purchase p = new Purchase("Fdsa");
+            p.Status = "fdsa";
+            sender.Send(p);
             //sender.send();
 
             //Application app = new Application();
