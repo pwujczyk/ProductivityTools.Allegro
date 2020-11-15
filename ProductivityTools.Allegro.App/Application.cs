@@ -7,13 +7,12 @@ namespace ProductivityTools.Allegro.App
 {
     public class Application
     {
-        public List<Purchase> GetPurchases(string login, string password)
+        public List<Purchase> GetPurchases(string login, string password, int count)
         {
             SeleniumCalls calls = new SeleniumCalls();
             calls.Login(login, password);
-            var purchases=calls.GetPurchases();
+            var purchases=calls.GetPurchases(count);
             return purchases;
-
         }
     }
 }

@@ -24,13 +24,19 @@ namespace ProductivityTools.Allegro.Selenium
             this.Chrome = new ChromeDriver(options);
         }
 
-        public List<Purchase> GetPurchases()
+        public List<Purchase> GetPurchases(int count)
         {
             List<Purchase> purchases = GetPurchasesItems();
-            foreach (var purchase in purchases)
+            int maxCount = count > purchases.Count ? purchases.Count : count;
+            for (int i = 0; i < maxCount; i++)
             {
+                var purchase = purchases[i];
                 FillPurchase(purchase);
             }
+            //foreach (var purchase in purchases)
+            //{
+            //    FillPurchase(purchase);
+            //}
             return purchases;
         }
 
@@ -49,7 +55,7 @@ namespace ProductivityTools.Allegro.Selenium
             public FillPurchaseClass(IWebDriver Chrome, Purchase purchase)
             {
                 this.Purchase = purchase;
-                Chrome.Url = $"{Addresses.Purchased}/{purchase.Id}";
+                Chrome.Url = $"{Addresses.Purchased}/{purchase.ExternalSystemId}";
                 detailsContainer = Chrome.FindElement(By.XPath("//*[@data-box-name='Main grid']"));
 
                 GetPurchaseItems();
