@@ -11,7 +11,7 @@ namespace ProductivityTools.Allegro.App
         {
             SeleniumCalls calls = new SeleniumCalls();
             calls.Login(login, password);
-            var purchases=calls.GetPurchases(count);
+            var purchases=calls.GetPurchases(count,false);
             return purchases;
         }
     }

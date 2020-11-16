@@ -17,21 +17,32 @@ namespace ProductivityTools.Allegro.Selenium
     public class SeleniumCalls
     {
         IWebDriver Chrome;
+        Action<string> Log;
 
         public SeleniumCalls()
         {
+            this.Log = (s) =>{ };
             ChromeOptions options = new ChromeOptions();
             this.Chrome = new ChromeDriver(options);
         }
 
-        public List<Purchase> GetPurchases(int count)
+
+        public SeleniumCalls(bool logToConsole) : this()
+        {
+            if (logToConsole)
+            {
+                this.Log = s => Console.WriteLine(s);
+            }
+        }
+
+        public List<Purchase> GetPurchases(int count, bool printInnerHtml)
         {
             List<Purchase> purchases = GetPurchasesItems();
             int maxCount = count > purchases.Count ? purchases.Count : count;
             for (int i = 0; i < maxCount; i++)
             {
                 var purchase = purchases[i];
-                FillPurchase(purchase);
+                FillPurchase(purchase, printInnerHtml);
             }
             //foreach (var purchase in purchases)
             //{
@@ -40,11 +51,11 @@ namespace ProductivityTools.Allegro.Selenium
             return purchases;
         }
 
-        private void FillPurchase(Purchase purchase)
+        private void FillPurchase(Purchase purchase, bool printInnerHtml)
         {
-            new FillPurchaseClass(this.Chrome, purchase);
+            new FillPurchaseClass(this.Chrome, purchase, printInnerHtml);
             new FillReturnClass(this.Chrome, purchase);
-            Console.WriteLine();
+            Log(Environment.NewLine);
         }
 
         private class FillPurchaseClass
@@ -52,7 +63,7 @@ namespace ProductivityTools.Allegro.Selenium
             private Purchase Purchase;
             private IWebElement detailsContainer;
 
-            public FillPurchaseClass(IWebDriver Chrome, Purchase purchase)
+            public FillPurchaseClass(IWebDriver Chrome, Purchase purchase, bool printInnerHtml)
             {
                 this.Purchase = purchase;
                 Chrome.Url = $"{Addresses.Purchased}/{purchase.ExternalSystemId}";
@@ -64,7 +75,7 @@ namespace ProductivityTools.Allegro.Selenium
 
                 FillSeller();
                 FillDelivery();
-                FillPayment();
+                FillPayment(printInnerHtml);
             }
 
             private void FillSeller()
@@ -115,7 +126,7 @@ namespace ProductivityTools.Allegro.Selenium
                 }
             }
 
-            private void FillPayment()
+            private void FillPayment(bool printInnerHtml)
             {
                 string paymentCss = "_1d2pv _3kk7b _vnd3k _1h8s6 _1nucm";
                 var paymentbox = detailsContainer.FindElement(By.Id("opbox-myorder-payment"));
@@ -123,7 +134,7 @@ namespace ProductivityTools.Allegro.Selenium
                 {
                     Func<string, string, string> GetValueUnderHeader = (s, tag) =>
                     {
-                        var valueMethodLabel = paymentbox.FindElementByInnerText("div", s, true);
+                        var valueMethodLabel = paymentbox.FindElementByInnerText("div", s, printInnerHtml);
                         if (valueMethodLabel == null) return null;
                         var valueMethodBox = valueMethodLabel.Parent();
                         var debug = valueMethodBox.InnerHtml();
@@ -163,51 +174,6 @@ namespace ProductivityTools.Allegro.Selenium
                     item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
                 }
                 this.Purchase.Items = result;
-
-
-                //    for (int i = 0; i < titleboxes.Count; i++)
-                //    {
-                //        var titleBox = titleboxes[i];
-                //        Console.WriteLine("INNER HTML");
-                //        Console.WriteLine(titleBox.InnerHtml());
-                //        Console.WriteLine();
-                //        Console.WriteLine("INNER TEXT");
-                //        Console.WriteLine(titleBox.InnerText());
-
-                //        var divs = titleBox.FindElements(By.TagName("div"));
-                //        var name1 = divs[1].InnerText();
-                //        var name2 = divs[2].InnerText();
-                //        var name3 = divs[3].InnerText();
-                //        var price = divs[4].InnerText();
-                //        foreach(var x in divs)
-                //        {
-                //            Console.WriteLine("-=====-");
-                //            Console.WriteLine(x.InnerHtml());
-                //            Console.WriteLine("XX");
-                //            Console.WriteLine(x.InnerText());
-                //        }
-                //        var element=titleBox.FindElement(By.XPath($"//a[@class='"+"_vc293 x1c1t xxsa1 mf6ib g183x _s8izy"+"']")); ;
-                //        var innerHtml = element.InnerHtml();
-                //        var innerText = element.InnerText(true);
-                //    }
-
-                //    foreach (var titleBox in titleboxes)
-                //    {
-                //        PurchaseItem item = new PurchaseItem();
-                //        result.Add(item);
-
-                //        var x = titleBox.InnerHtml();
-
-
-                //        var title = titleBox.FindElement(By.TagName("Span"));
-                //        item.Name = title.InnerText();
-
-                //        var amountAndPrice = titleBox.FindElementByMultipleClass("c1npm trz41 _3kk7b _t0xzz _1t6t8");
-                //        var amount = amountAndPrice.InnerText();
-                //        item.Amount = int.Parse(amount.Substring(0, amount.IndexOf('x')).Trim());
-                //        item.SinglePrice = decimal.Parse(amount.TrimEnd('z', 'ł').Substring(amount.IndexOf('x') + 1).Trim());
-                //    }
-                //    this.Purchase.Items = result;
             }
         }
 

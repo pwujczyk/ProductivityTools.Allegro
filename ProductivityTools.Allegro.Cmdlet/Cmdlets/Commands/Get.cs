@@ -34,7 +34,7 @@ namespace ProductivityTools.Allegro.Cmdlet.Commands
             var purchases=app.GetPurchases(login, password,this.Cmdlet.Count);
             for (int i = 0; i < this.Cmdlet.Count; i++)
             {
-                Console.Write(purchases[i].Dealer.Name);
+                Console.WriteLine(purchases[i].Dealer.Name);
                 foreach(var item in purchases[i].Items)
                 {
                     Console.WriteLine(item.Name);
