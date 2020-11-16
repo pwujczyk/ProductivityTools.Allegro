@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using ProductivityTools.Allegro.App;
+using ProductivityTools.ConsoleColor;
 using ProductivityTools.MasterConfiguration;
 using ProductivityTools.Purchases.Contract;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -19,29 +21,22 @@ namespace ProductivityTools.Allegro.Cmdlet.Commands
         protected override void Invoke()
         {
             var configuration = new ConfigurationBuilder()
-                .AddMasterConfiguration(force:true)
+                .AddMasterConfiguration(force: true)
                 .Build();
             var login = configuration["Login"];
             var password = configuration["Password"];
 
-            //ProductivityTools.Allegro.ServiceBus.ServiceBusSender sender = new ServiceBus.ServiceBusSender();
-            //Purchase p = new Purchase("Fdsa");
-            //p.Status = "fdsa";
-            //sender.Send(p);
-            
-
             Application app = new Application();
-            var purchases=app.GetPurchases(login, password,this.Cmdlet.Count);
+            this.Cmdlet.PurchaseList = app.GetPurchases(login, password, this.Cmdlet.Count);
             for (int i = 0; i < this.Cmdlet.Count; i++)
             {
-                Console.WriteLine(purchases[i].Dealer.Name);
-                foreach(var item in purchases[i].Items)
+                ConsoleColors.WriteInColor(this.Cmdlet.PurchaseList[i].Dealer.Name, 76, true);
+                foreach (var item in this.Cmdlet.PurchaseList[i].Items)
                 {
-                    Console.WriteLine(item.Name);
+                    ConsoleColors.WriteInColor(item.Name, 220, true);
                 }
                 Console.WriteLine();
             }
-            Console.WriteLine("Hello from TimeTrackingCommandAll");
         }
     }
 }
