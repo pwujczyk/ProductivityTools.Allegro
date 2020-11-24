@@ -21,9 +21,9 @@ namespace ProductivityTools.Allegro.Cmdlet.Commands
         protected override void Invoke()
         {
             ProductivityTools.Allegro.ServiceBus.ServiceBusSender sender = new ServiceBus.ServiceBusSender();
-            foreach (var purchase in this.Cmdlet.PurchaseList)
+            for (int i = 0; i < this.Cmdlet.Count; i++)
             {
-                sender.Send(purchase);
+                sender.Send(this.Cmdlet.PurchaseList[i]);
             }
         }
     }
